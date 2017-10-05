@@ -28,7 +28,10 @@
 # Fail on any error.
 set -e
 
-script_version="v2.0.0"
+# Display commands to stderr.
+set -x
+
+script_version="v2.1.0"
 echo "bazel_build_and_test version $script_version"
 
 target="$1"
