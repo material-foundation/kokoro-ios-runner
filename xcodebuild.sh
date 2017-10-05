@@ -25,7 +25,7 @@
 #   3. grep filter for iPhone simulator types [optional].
 #
 # Example usage:
-#   xcodebuild.sh xcodebuild "MotionInterchange/MotionInterchange.xcodeproj" MotionInterchange "iPhone SE"
+#   xcodebuild.sh "MotionInterchange/MotionInterchange.xcodeproj" MotionInterchange "iPhone SE"
 
 # Fail on any error.
 set -e
