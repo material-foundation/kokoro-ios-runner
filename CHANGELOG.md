@@ -1,7 +1,18 @@
-# #develop#
+# 2.0.0
 
- TODO: Enumerate changes.
+This release introduces support for the [bazel](https://bazel.build/) toolchain.
 
+## Breaking changes
+
+- `build_and_test.sh` has been renamed to `xcodebuild.sh`
+
+## New features
+
+- The new `bazel.sh` script supports running bazel builds against all local Xcode installs.
+
+## Source changes
+
+* [Add support for bazel builds. (#2)](https://github.com/material-foundation/kokoro-ios-runner/commit/e8930a547675494b6f3bfe784baab2e374d4318f) (featherless)
 
 # 1.0.0
 
