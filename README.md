@@ -1,11 +1,10 @@
 # Kokoro iOS runner
 
-This repo contains a script for running iOS tests on a kokoro instance, though it can be deployed
-to any iOS testing infrastructure.
+This repo contains a script for running iOS tests on a kokoro instance.
 
-## Usage
+## Usage (xcodebuild)
 
-An example script making use of the kokoro iOS runner:
+An example script making use of the xcodebuild kokoro iOS runner:
 
 ```bash
 #!/bin/bash
@@ -19,10 +18,34 @@ fi
 
 pushd .kokoro-ios-runner
 git fetch
-git checkout v1.0.0
+git checkout v2.0.0
 popd
 
-./.kokoro-ios-runner/build_and_test.sh "MotionInterchange/MotionInterchange.xcodeproj" MotionInterchange "iPhone SE"
+./.kokoro-ios-runner/xcodebuild.sh "MotionInterchange/MotionInterchange.xcodeproj" MotionInterchange "iPhone SE"
 
 bash <(curl -s https://codecov.io/bash)
+```
+
+## Usage (bazel)
+
+> [Learn more about bazel for iOS](https://docs.bazel.build/versions/master/tutorial/ios-app.html).
+
+An example script making use of the bazel kokoro iOS runner:
+
+```bash
+#!/bin/bash
+
+# Fail on any error.
+set -e
+
+if [ ! -d .kokoro-ios-runner ]; then
+  git clone https://github.com/material-foundation/kokoro-ios-runner.git .kokoro-ios-runner
+fi
+
+pushd .kokoro-ios-runner
+git fetch
+git checkout v2.0.0
+popd
+
+./.kokoro-ios-runner/bazel.sh //:CatalogByConvention
 ```

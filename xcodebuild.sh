@@ -25,7 +25,7 @@
 #   3. grep filter for iPhone simulator types [optional].
 #
 # Example usage:
-#   build_and_test "MotionInterchange/MotionInterchange.xcodeproj" MotionInterchange "iPhone SE"
+#   xcodebuild.sh "MotionInterchange/MotionInterchange.xcodeproj" MotionInterchange "iPhone SE"
 
 # Fail on any error.
 set -e
@@ -95,7 +95,7 @@ run() {
   fi
 }
 
-script_version="v1.0.0"
+script_version="v2.0.0"
 echo "build_and_test version $script_version"
 
 project="$1"
