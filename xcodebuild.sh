@@ -30,6 +30,9 @@
 # Fail on any error.
 set -e
 
+# Display commands to stderr.
+set -x
+
 # Runs a clean build + tests using xcodebuild on the active Xcode installation.
 run() {
   echo "🏗️  clean building $scheme in $project for simulator..."
