@@ -1,7 +1,14 @@
-# #develop#
+# 2.1.0
 
- TODO: Enumerate changes.
+This minor release adds command logging to the kokoro builds.
 
+## New features
+
+Commands are now output to stderr along with their results.
+
+## Source changes
+
+* [Display commands to stderr. (#3)](https://github.com/material-foundation/kokoro-ios-runner/commit/823b51e5f08a57e971667a3608439c886fcf214d) (featherless)
 
 # 2.0.0
 
