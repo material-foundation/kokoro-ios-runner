@@ -16,12 +16,8 @@
 #
 # Build script for kokoro.
 #
-# With no modifications, this script will clean, build, and run tests for the given configuration
-# on each installation of Xcode available on the machine.
-#
-# Runs against Xcode 8 and 9.
-#
-# build_and_test is the entry-point for running tests.
+# This script will clean, build, and run tests against each installation of Xcode 8 and 9 available
+# on the machine.
 #
 # Arguments:
 #   1. Path to xcodeproj
