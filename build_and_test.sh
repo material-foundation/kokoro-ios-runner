@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright 2017-present The kokoro iOS runner Authors. All Rights Reserved.
+# Copyright 2017-present The Kokoro iOS Runner Authors. All Rights Reserved.
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,24 +29,6 @@
 
 # Fail on any error.
 set -e
-
-script_version="v1.0.0"
-echo "build_and_test version $script_version"
-
-project="$1"
-scheme="$2"
-target_simulator_filter="$3"
-
-# Dependencies
-
-if [ -z "$KOKORO_GITHUB_PULL_REQUEST_NUMBER" ]; then
-  : # Local run - nothing to do.
-else
-  gem install xcpretty --no-rdoc --no-ri --no-document --quiet
-
-  # Move into our cloned repo
-  cd github/repo
-fi
 
 # Runs a clean build + tests using xcodebuild on the active Xcode installation.
 run() {
@@ -112,6 +94,24 @@ run() {
     fi
   fi
 }
+
+script_version="v1.0.0"
+echo "build_and_test version $script_version"
+
+project="$1"
+scheme="$2"
+target_simulator_filter="$3"
+
+# Dependencies
+
+if [ -z "$KOKORO_GITHUB_PULL_REQUEST_NUMBER" ]; then
+  : # Local run - nothing to do.
+else
+  gem install xcpretty --no-rdoc --no-ri --no-document --quiet
+
+  # Move into our cloned repo
+  cd github/repo
+fi
 
 if [ -z "$KOKORO_GITHUB_PULL_REQUEST_NUMBER" ]; then
   run # Run with the Xcode currently pointed to by xcode-select.
