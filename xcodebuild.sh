@@ -74,7 +74,7 @@ run() {
       | xcpretty
       set +o pipefail
 
-      if [ -z "$KOKORO_GITHUB_PULL_REQUEST_NUMBER" ]; then
+      if [ -z "$KOKORO_BUILD_NUMBER" ]; then
         :
       else
         # Avoid a buildup of active simulators.
@@ -107,7 +107,7 @@ target_simulator_filter="$3"
 
 # Dependencies
 
-if [ -z "$KOKORO_GITHUB_PULL_REQUEST_NUMBER" ]; then
+if [ -z "$KOKORO_BUILD_NUMBER" ]; then
   : # Local run - nothing to do.
 else
   gem install xcpretty --no-rdoc --no-ri --no-document --quiet
@@ -116,7 +116,7 @@ else
   cd github/repo
 fi
 
-if [ -z "$KOKORO_GITHUB_PULL_REQUEST_NUMBER" ]; then
+if [ -z "$KOKORO_BUILD_NUMBER" ]; then
   run # Run with the Xcode currently pointed to by xcode-select.
 else
   # Runs our tests on every available Xcode 8 or 9 installation.

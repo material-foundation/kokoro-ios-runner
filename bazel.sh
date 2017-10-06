@@ -38,7 +38,7 @@ target="$1"
 
 # Dependencies
 
-if [ -z "$KOKORO_GITHUB_PULL_REQUEST_NUMBER" ]; then
+if [ -z "$KOKORO_BUILD_NUMBER" ]; then
   : # Local run - nothing to do.
 else
   # Move into our cloned repo
