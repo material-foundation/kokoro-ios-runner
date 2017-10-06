@@ -33,7 +33,7 @@ set -e
 # Display commands to stderr.
 set -x
 
-script_version="v2.1.1"
+script_version="v3.0.0"
 echo "bazel_build_and_test version $script_version"
 
 action="$1"
