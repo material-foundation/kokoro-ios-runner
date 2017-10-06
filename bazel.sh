@@ -20,10 +20,12 @@
 # machine using bazel.
 #
 # Arguments:
-#   1. BUILD target.
+#   1. bazel action (build or test, usually)
+#   2. BUILD target.
 #
 # Example usage:
-#   bazel.sh //:CatalogByConvention
+#   bazel.sh build //:CatalogByConvention
+#   bazel.sh test //:CatalogByConventionTests
 
 # Fail on any error.
 set -e
@@ -31,10 +33,11 @@ set -e
 # Display commands to stderr.
 set -x
 
-script_version="v2.1.1"
+script_version="v3.0.0"
 echo "bazel_build_and_test version $script_version"
 
-target="$1"
+action="$1"
+target="$2"
 
 # Dependencies
 
@@ -52,7 +55,15 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
     | grep string \
     | cut -d'>' -f2 \
     | cut -d'<' -f1)
-  echo "🏗️  clean building $target with Xcode $xcode_version..."
+
+  set +x
+  if [ "$action" == "build" ]; then
+    echo "🏗️  $target with Xcode $xcode_version..."
+  elif [ "$action" == "test" ]; then
+    echo "🛠️  $target with Xcode $xcode_version..."
+  fi
+  set -x
+
   bazel clean
-  bazel build $target --xcode_version $xcode_version
+  bazel $action $target --xcode_version $xcode_version
 done
