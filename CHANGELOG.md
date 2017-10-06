@@ -1,7 +1,18 @@
-# #develop#
+# 3.0.0
 
- TODO: Enumerate changes.
+This major change adds support for running arbitrary bazel commands (notably test) on targets.
 
+## Breaking changes
+
+- bazel.sh now accepts a bazel command as its first argument and the target as its second.
+
+## New features
+
+- Support for arbitrary bazel commands.
+
+## Source changes
+
+* [Add support for running bazel tests (#5)](https://github.com/material-foundation/kokoro-ios-runner/commit/d85ac6c5cd1a432004f490c95d29d1915ebfb297) (featherless)
 
 # 2.1.1
 
