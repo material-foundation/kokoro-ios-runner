@@ -55,12 +55,15 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
     | grep string \
     | cut -d'>' -f2 \
     | cut -d'<' -f1)
+
+  set +x
   if [ "$action" == "build" ]; then
-    echo -n "🏗️  "
+    echo "🏗️  $target with Xcode $xcode_version..."
   elif [ "$action" == "test" ]; then
-    echo -n "🛠️  "
+    echo "🛠️  $target with Xcode $xcode_version..."
   fi
-  echo "$target with Xcode $xcode_version..."
+  set -x
+
   bazel clean
   bazel $action $target --xcode_version $xcode_version
 done
