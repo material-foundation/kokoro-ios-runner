@@ -1,7 +1,11 @@
-# #develop#
+# 2.1.1
 
- TODO: Enumerate changes.
+This patch release fixes a bug where the runner scripts wouldn't think they were running in kokoro
+during continuous integration builds.
 
+## Source changes
+
+* [Use KOKORO_BUILD_NUMBER to detect whether we're building on a kokoro instance rather than KOKORO_GITHUB_PULL_REQUEST_NUMBER. (#4)](https://github.com/material-foundation/kokoro-ios-runner/commit/34f423b57a55912bf3f08fb4f05ef5ad0ed9a878) (featherless)
 
 # 2.1.0
 
