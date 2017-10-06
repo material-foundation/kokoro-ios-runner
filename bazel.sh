@@ -31,14 +31,14 @@ set -e
 # Display commands to stderr.
 set -x
 
-script_version="v2.1.0"
+script_version="v2.1.1"
 echo "bazel_build_and_test version $script_version"
 
 target="$1"
 
 # Dependencies
 
-if [ -z "$KOKORO_GITHUB_PULL_REQUEST_NUMBER" ]; then
+if [ -z "$KOKORO_BUILD_NUMBER" ]; then
   : # Local run - nothing to do.
 else
   # Move into our cloned repo

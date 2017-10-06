@@ -18,7 +18,7 @@ fi
 
 pushd .kokoro-ios-runner
 git fetch
-git checkout v2.1.0
+git checkout v2.1.1
 popd
 
 ./.kokoro-ios-runner/xcodebuild.sh "MotionInterchange/MotionInterchange.xcodeproj" MotionInterchange "iPhone SE"
@@ -44,7 +44,7 @@ fi
 
 pushd .kokoro-ios-runner
 git fetch
-git checkout v2.1.0
+git checkout v2.1.1
 popd
 
 ./.kokoro-ios-runner/bazel.sh //:CatalogByConvention
