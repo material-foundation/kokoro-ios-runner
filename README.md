@@ -47,6 +47,6 @@ git fetch
 git checkout v3.0.0
 popd
 
-./.kokoro-ios-runner/bazel.sh build //:CatalogByConvention
-./.kokoro-ios-runner/bazel.sh test //:CatalogByConventionTests
+./.kokoro-ios-runner/bazel.sh build //:CatalogByConvention 8.0.0
+./.kokoro-ios-runner/bazel.sh test //:CatalogByConventionTests 8.0.0
 ```
