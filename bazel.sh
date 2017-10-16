@@ -22,6 +22,7 @@
 # Arguments:
 #   1. bazel action (build or test, usually)
 #   2. BUILD target.
+#   3. Minimum Xcode version. E.g. "8" or "8.2.1"
 #
 # Example usage:
 #   bazel.sh build //:CatalogByConvention
@@ -36,8 +37,18 @@ set -x
 script_version="v3.0.0"
 echo "bazel_build_and_test version $script_version"
 
+version_as_number() {
+  padded_version="${1%.}" # Strip any trailing dots
+  # Pad with .0 until we get a M.m.p version string.
+  while [ $(grep -o "\." <<< "$padded_version" | wc -l) -lt "2" ]; do
+    padded_version=${padded_version}.0
+  done
+  echo "${padded_version//.}"
+}
+
 action="$1"
 target="$2"
+min_xcode_version="$(version_as_number $3)"
 
 # Dependencies
 
@@ -55,6 +66,16 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
     | grep string \
     | cut -d'>' -f2 \
     | cut -d'<' -f1)
+  if [ -z "$min_xcode_version" ]; then
+    :
+  else
+    xcode_version_as_number="$(version_as_number $xcode_version)"
+
+    # TODO: This doesn't work yet.
+    if [ "$xcode_version_as_number" -lt "$min_xcode_version" ]; then
+      continue
+    fi
+  fi
 
   set +x
   if [ "$action" == "build" ]; then
