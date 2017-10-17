@@ -84,6 +84,10 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
   elif [ "$action" == "test" ]; then
     echo "🛠️  $target with Xcode $xcode_version..."
     extra_args="--test_output=errors"
+    
+    # Resolves the following crash when switching Xcode versions:
+    # "Failed to locate a valid instance of CoreSimulatorService in the bootstrap"
+    launchctl remove com.apple.CoreSimulator.CoreSimulatorService
   fi
   set -x
 
