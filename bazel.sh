@@ -86,7 +86,9 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
 
     # Resolves the following crash when switching Xcode versions:
     # "Failed to locate a valid instance of CoreSimulatorService in the bootstrap"
+    set +e
     launchctl remove com.apple.CoreSimulator.CoreSimulatorService
+    set -e
   fi
 
   bazel clean
