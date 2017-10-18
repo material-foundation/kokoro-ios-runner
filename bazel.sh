@@ -52,9 +52,7 @@ min_xcode_version="$(version_as_number $3)"
 
 # Dependencies
 
-if [ -z "$KOKORO_BUILD_NUMBER" ]; then
-  : # Local run - nothing to do.
-else
+if [ -n "$KOKORO_BUILD_NUMBER" ]; then
   # Move into our cloned repo
   cd github/repo
 fi
@@ -66,9 +64,7 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
     | grep string \
     | cut -d'>' -f2 \
     | cut -d'<' -f1)
-  if [ -z "$min_xcode_version" ]; then
-    :
-  else
+  if [ -n "$min_xcode_version" ]; then
     xcode_version_as_number="$(version_as_number $xcode_version)"
 
     # TODO: This doesn't work yet.
@@ -77,14 +73,23 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
     fi
   fi
 
-  set +x
+  extra_args=""
   if [ "$action" == "build" ]; then
     echo "🏗️  $target with Xcode $xcode_version..."
   elif [ "$action" == "test" ]; then
     echo "🛠️  $target with Xcode $xcode_version..."
+    extra_args="--test_output=errors"
+
+    if [ -n "$KOKORO_BUILD_NUMBER" ]; then
+      sudo xcode-select --switch /Applications/$xcode_path/Contents/Developer
+      xcodebuild -version
+
+      # Resolves the following crash when switching Xcode versions:
+      # "Failed to locate a valid instance of CoreSimulatorService in the bootstrap"
+      launchctl remove com.apple.CoreSimulator.CoreSimulatorService || true
+    fi
   fi
-  set -x
 
   bazel clean
-  bazel $action $target --xcode_version $xcode_version
+  bazel $action $target --xcode_version $xcode_version $extra_args
 done
