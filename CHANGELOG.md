@@ -1,11 +1,20 @@
-# #develop#
+# 3.1.0
 
- TODO: Enumerate changes.
+This minor release adds support for specifying a minimum Xcode version and improved support for unit
+test runs when using bazel.sh.
 
+## New features
+
+- It's now possible to specify a minimum Xcode version when running bazel commands.
+
+## Source changes
+
+* [Improved support for unit test runs (#7)](https://github.com/material-foundation/kokoro-ios-runner/commit/3f4c27c7af116ec72208beaffb7a11bd0366494b) (featherless)
+* [Add support for specifying a minimum Xcode version. (#6)](https://github.com/material-foundation/kokoro-ios-runner/commit/0f07d8f376189dcce3715dca89d00f2eb4461d0b) (featherless)
 
 # 3.0.0
 
-This major change adds support for running arbitrary bazel commands (notably test) on targets.
+This major release adds support for running arbitrary bazel commands (notably test) on targets.
 
 ## Breaking changes
 

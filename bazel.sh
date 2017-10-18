@@ -67,7 +67,6 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
   if [ -n "$min_xcode_version" ]; then
     xcode_version_as_number="$(version_as_number $xcode_version)"
 
-    # TODO: This doesn't work yet.
     if [ "$xcode_version_as_number" -lt "$min_xcode_version" ]; then
       continue
     fi
