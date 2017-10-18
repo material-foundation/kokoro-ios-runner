@@ -34,7 +34,7 @@ set -e
 # Display commands to stderr.
 set -x
 
-script_version="v3.0.0"
+script_version="v3.1.0"
 echo "bazel_build_and_test version $script_version"
 
 version_as_number() {
@@ -67,7 +67,6 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
   if [ -n "$min_xcode_version" ]; then
     xcode_version_as_number="$(version_as_number $xcode_version)"
 
-    # TODO: This doesn't work yet.
     if [ "$xcode_version_as_number" -lt "$min_xcode_version" ]; then
       continue
     fi
