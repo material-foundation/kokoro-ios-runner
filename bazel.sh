@@ -22,6 +22,7 @@
 # Arguments:
 #   1. bazel action (build or test, usually)
 #   2. BUILD target.
+#   3. Minimum Xcode version. E.g. "8" or "8.2.1"
 #
 # Example usage:
 #   bazel.sh build //:CatalogByConvention
@@ -33,17 +34,25 @@ set -e
 # Display commands to stderr.
 set -x
 
-script_version="v3.0.0"
+script_version="v3.1.0"
 echo "bazel_build_and_test version $script_version"
+
+version_as_number() {
+  padded_version="${1%.}" # Strip any trailing dots
+  # Pad with .0 until we get a M.m.p version string.
+  while [ $(grep -o "\." <<< "$padded_version" | wc -l) -lt "2" ]; do
+    padded_version=${padded_version}.0
+  done
+  echo "${padded_version//.}"
+}
 
 action="$1"
 target="$2"
+min_xcode_version="$(version_as_number $3)"
 
 # Dependencies
 
-if [ -z "$KOKORO_BUILD_NUMBER" ]; then
-  : # Local run - nothing to do.
-else
+if [ -n "$KOKORO_BUILD_NUMBER" ]; then
   # Move into our cloned repo
   cd github/repo
 fi
@@ -55,15 +64,31 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
     | grep string \
     | cut -d'>' -f2 \
     | cut -d'<' -f1)
+  if [ -n "$min_xcode_version" ]; then
+    xcode_version_as_number="$(version_as_number $xcode_version)"
 
-  set +x
+    if [ "$xcode_version_as_number" -lt "$min_xcode_version" ]; then
+      continue
+    fi
+  fi
+
+  extra_args=""
   if [ "$action" == "build" ]; then
     echo "🏗️  $target with Xcode $xcode_version..."
   elif [ "$action" == "test" ]; then
     echo "🛠️  $target with Xcode $xcode_version..."
+    extra_args="--test_output=errors"
+
+    if [ -n "$KOKORO_BUILD_NUMBER" ]; then
+      sudo xcode-select --switch /Applications/$xcode_path/Contents/Developer
+      xcodebuild -version
+
+      # Resolves the following crash when switching Xcode versions:
+      # "Failed to locate a valid instance of CoreSimulatorService in the bootstrap"
+      launchctl remove com.apple.CoreSimulator.CoreSimulatorService || true
+    fi
   fi
-  set -x
 
   bazel clean
-  bazel $action $target --xcode_version $xcode_version
+  bazel $action $target --xcode_version $xcode_version $extra_args
 done
