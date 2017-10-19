@@ -1,3 +1,17 @@
+# 3.1.1
+
+This patch release fixes a bug on local runs of the bazel scripts where the simulator would crash
+between different Xcode versions.
+
+## Source changes
+
+* [Run launchctl remove com.apple.CoreSimulator.CoreSimulatorService on local runs as well. (#8)](https://github.com/material-foundation/kokoro-ios-runner/commit/14ee009563082fb2eb74d976b0a4216e35651064) (featherless)
+
+## Non-source changes
+
+* [Update README.md (#9)](https://github.com/material-foundation/kokoro-ios-runner/commit/c7bee8406f90911bf0181eb36e4b013132032620) (ianegordon)
+
+
 # 3.1.0
 
 This minor release adds support for specifying a minimum Xcode version and improved support for unit
