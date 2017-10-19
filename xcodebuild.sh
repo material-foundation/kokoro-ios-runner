@@ -98,7 +98,7 @@ run() {
   fi
 }
 
-script_version="v3.1.0"
+script_version="v3.1.1"
 echo "build_and_test version $script_version"
 
 project="$1"
