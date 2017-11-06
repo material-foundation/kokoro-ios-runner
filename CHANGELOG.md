@@ -1,7 +1,10 @@
-# #develop#
+# 3.2.0
 
- TODO: Enumerate changes.
+This minor release increases the amount of logging generated during bazel runs.
 
+## Source changes
+
+* [Add more build and test output during bazel runs. (#11)](https://github.com/material-foundation/kokoro-ios-runner/commit/db3aa9a2ae602533be0a51ce6cdde8297b6dfc41) (featherless)
 
 # 3.1.1
 
@@ -15,7 +18,6 @@ between different Xcode versions.
 ## Non-source changes
 
 * [Update README.md (#9)](https://github.com/material-foundation/kokoro-ios-runner/commit/c7bee8406f90911bf0181eb36e4b013132032620) (ianegordon)
-
 
 # 3.1.0
 
