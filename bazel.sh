@@ -34,7 +34,7 @@ set -e
 # Display commands to stderr.
 set -x
 
-script_version="v3.1.1"
+script_version="v3.2.0"
 echo "bazel_build_and_test version $script_version"
 
 version_as_number() {
@@ -77,7 +77,7 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
     echo "🏗️  $target with Xcode $xcode_version..."
   elif [ "$action" == "test" ]; then
     echo "🛠️  $target with Xcode $xcode_version..."
-    extra_args="--test_output=errors"
+    extra_args="--test_output=all"
 
     if [ -n "$KOKORO_BUILD_NUMBER" ]; then
       sudo xcode-select --switch /Applications/$xcode_path/Contents/Developer
@@ -90,5 +90,5 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
   fi
 
   bazel clean
-  bazel $action $target --xcode_version $xcode_version $extra_args
+  bazel $action $target --xcode_version $xcode_version $extra_args -s
 done
