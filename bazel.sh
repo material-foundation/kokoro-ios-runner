@@ -57,7 +57,7 @@ if [ -n "$KOKORO_BUILD_NUMBER" ]; then
   cd github/repo
 fi
 
-# Runs our tests on every available Xcode 8 or 9 installation.
+# Runs our tests on every available Xcode installation.
 ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
   xcode_version=$(cat /Applications/$xcode_path/Contents/version.plist \
     | grep "CFBundleShortVersionString" -A1 \
