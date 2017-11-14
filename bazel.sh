@@ -57,6 +57,10 @@ if [ -n "$KOKORO_BUILD_NUMBER" ]; then
   cd github/repo
 fi
 
+if [ -n "$KOKORO_BUILD_NUMBER" ]; then
+  verbosity_flags="-s"
+fi
+
 # Runs our tests on every available Xcode installation.
 ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
   xcode_version=$(cat /Applications/$xcode_path/Contents/version.plist \
@@ -90,5 +94,5 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
   fi
 
   bazel clean
-  bazel $action $target --xcode_version $xcode_version $extra_args -s
+  bazel $action $target --xcode_version $xcode_version $extra_args $verbosity_flags
 done
