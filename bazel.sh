@@ -130,7 +130,5 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
   fi
 
   bazel clean
-  if [ "$ACTION" -ne "build" ]; then
-    bazel $ACTION $TARGET --xcode_version $xcode_version $extra_args $verbosity_flags $BAZEL_ARGS
-  fi
+  bazel $ACTION $TARGET --xcode_version $xcode_version $extra_args $verbosity_flags $BAZEL_ARGS
 done
