@@ -47,5 +47,5 @@ git fetch
 git checkout v4.0.0
 popd
 
-./.kokoro-ios-runner/bazel.sh test //:CatalogByConventionTests --xcode-version 8.0.0
+./.kokoro-ios-runner/bazel.sh test //:CatalogByConventionTests --min-xcode-version 8.0.0
 ```
