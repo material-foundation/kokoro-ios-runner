@@ -30,7 +30,7 @@
 #   -v|--verbose:                     Generates verbose output on local runs.
 #                                     Does not affect kokoro runs.
 #
-# Any other unrecognized arguments will be passed along to the bazel invocation.
+# Any unrecognized arguments will be passed along to the bazel invocation.
 #
 # Example usage:
 #   bazel.sh build //:CatalogByConvention --min-xcode-version 8.2
