@@ -29,8 +29,8 @@
 #                                     Does not affect kokoro runs.
 #
 # Example usage:
-#   bazel.sh -a build -t //:CatalogByConvention -m 8.2
-#   bazel.sh -a test -t //:CatalogByConventionTests -v
+#   bazel.sh build //:CatalogByConvention --xcode-version 8.2
+#   bazel.sh test //:CatalogByConventionTests -v
 
 # Fail on any error.
 set -e
