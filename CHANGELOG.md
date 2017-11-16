@@ -1,3 +1,27 @@
+# 4.1.0
+
+This minor release introduces support for passing arbitrary flags to bazel invocations.
+
+## New features
+
+Any unrecognized arguments passed to bazel.sh will now be passed along to the bazel invocation. This
+can be used to invoke the build against multiple architectures. For example:
+
+```
+./.kokoro-ios-runner/bazel.sh test //components/... \
+    --min-xcode-version 8.2 \
+    --ios_minimum_os=8.0 \
+    --ios_multi_cpus=i386,x86_64
+```
+
+## Source changes
+
+* [Add support for passing arbitrary bazel arguments along to bazel (#16)](https://github.com/material-foundation/kokoro-ios-runner/commit/bad93074045ad48b17d1ce325d38d725a848b3d8) (featherless)
+* [Fix another typo in the README.](https://github.com/material-foundation/kokoro-ios-runner/commit/ffa1680bd8c82d7bf720a6e5bdb8f4e404154ea2) (Jeff Verkoeyen)
+* [Fix typo in the docs.](https://github.com/material-foundation/kokoro-ios-runner/commit/52e4caa91d31a5a996ebd0c12d0c9012ac97e3bd) (Jeff Verkoeyen)
+
+## API changes
+
 # 4.0.0
 
 This major release introduces support for configuring bazel output verbosity.
@@ -11,7 +35,7 @@ The minimum Xcode version must now be provided as a flag.
 bazel.sh build //:CatalogByConvention 8.2
 
 // New invocations:
-bazel.sh build //:CatalogByConvention --xcode-version 8.2
+bazel.sh build //:CatalogByConvention --min-xcode-version 8.2
 ```
 
 ## New features
