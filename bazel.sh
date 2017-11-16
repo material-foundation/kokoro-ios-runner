@@ -19,23 +19,26 @@
 # This script will clean, build, and run tests against each installation of Xcode available on the
 # machine using bazel.
 #
-# Arguments:
-#   1. bazel action (build or test, usually)
-#   2. BUILD target.
-#   3. Minimum Xcode version. E.g. "8" or "8.2.1"
+# Ordered arguments:
+#   1. action:  bazel ACTION. E.g. "build" or "test".
+#   2. target:  Bazel build target. E.g. "//path/to/target:Target"
+#
+# Named arguments:
+#   -m|--min-xcode-version <version>: Every Xcode version equal to or greater than this value will
+#                                     build and run tests. E.g. "8.2.1" will run 8.2.1, 8.3.3, 9,
+#                                     etc...
+#   -v|--verbose:                     Generates verbose output on local runs.
+#                                     Does not affect kokoro runs.
 #
 # Example usage:
-#   bazel.sh build //:CatalogByConvention
-#   bazel.sh test //:CatalogByConventionTests
+#   bazel.sh build //:CatalogByConvention --xcode-version 8.2
+#   bazel.sh test //:CatalogByConventionTests -v
 
 # Fail on any error.
 set -e
 
-# Display commands to stderr.
-set -x
-
-script_version="v3.2.0"
-echo "bazel_build_and_test version $script_version"
+script_version="v4.0.0"
+echo "$(basename $0) version $script_version"
 
 version_as_number() {
   padded_version="${1%.}" # Strip any trailing dots
@@ -46,38 +49,72 @@ version_as_number() {
   echo "${padded_version//.}"
 }
 
-action="$1"
-target="$2"
-min_xcode_version="$(version_as_number $3)"
+POSITIONAL=()
+while [[ $# -gt 0 ]]; do
+  key="$1"
 
-# Dependencies
+  case $key in
+  -m|--min-xcode-version)
+    MIN_XCODE_VERSION="$(version_as_number $2)"
+    shift
+    shift
+    ;;
+  -v|--verbose)
+    VERBOSE_OUTPUT="1"
+    shift
+    ;;
+  *)
+    POSITIONAL+=("$1")
+    shift
+    ;;
+  esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
 
 if [ -n "$KOKORO_BUILD_NUMBER" ]; then
   # Move into our cloned repo
   cd github/repo
+
+  # Always enable verbose output on kokoro runs.
+  VERBOSE_OUTPUT=1
 fi
 
-# Runs our tests on every available Xcode 8 or 9 installation.
+if [ -n "$VERBOSE_OUTPUT" ]; then
+  verbosity_flags="-s"
+
+  # Display commands to stderr.
+  set -x
+fi
+
+ACTION="$1"
+TARGET="$2"
+
+# Runs our tests on every available Xcode installation.
 ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
   xcode_version=$(cat /Applications/$xcode_path/Contents/version.plist \
     | grep "CFBundleShortVersionString" -A1 \
     | grep string \
     | cut -d'>' -f2 \
     | cut -d'<' -f1)
-  if [ -n "$min_xcode_version" ]; then
+  if [ -n "$MIN_XCODE_VERSION" ]; then
     xcode_version_as_number="$(version_as_number $xcode_version)"
 
-    if [ "$xcode_version_as_number" -lt "$min_xcode_version" ]; then
+    if [ "$xcode_version_as_number" -lt "$MIN_XCODE_VERSION" ]; then
       continue
     fi
   fi
 
   extra_args=""
-  if [ "$action" == "build" ]; then
-    echo "🏗️  $target with Xcode $xcode_version..."
-  elif [ "$action" == "test" ]; then
-    echo "🛠️  $target with Xcode $xcode_version..."
-    extra_args="--test_output=all"
+  if [ "$ACTION" == "build" ]; then
+    echo "🏗️  $TARGET with Xcode $xcode_version..."
+  elif [ "$ACTION" == "test" ]; then
+    echo "🛠️  $TARGET with Xcode $xcode_version..."
+
+    if [ -n "$VERBOSE_OUTPUT" ]; then
+      extra_args="--test_output=all"
+    else
+      extra_args="--test_output=errors"
+    fi
 
     if [ -n "$KOKORO_BUILD_NUMBER" ]; then
       sudo xcode-select --switch /Applications/$xcode_path/Contents/Developer
@@ -90,5 +127,5 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
   fi
 
   bazel clean
-  bazel $action $target --xcode_version $xcode_version $extra_args -s
+  bazel $ACTION $TARGET --xcode_version $xcode_version $extra_args $verbosity_flags
 done
