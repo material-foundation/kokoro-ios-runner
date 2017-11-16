@@ -1,7 +1,33 @@
-# #develop#
+# 4.0.0
 
- TODO: Enumerate changes.
+This major release introduces support for configuring bazel output verbosity.
 
+## Breaking changes
+
+The minimum Xcode version must now be provided as a flag.
+
+```
+// Old invocations:
+bazel.sh build //:CatalogByConvention 8.2
+
+// New invocations:
+bazel.sh build //:CatalogByConvention --xcode-version 8.2
+```
+
+## New features
+
+Local bazel builds no longer build with verbose output. To enable verbose output, pass the `-v` flag
+to the bazel.sh script.
+
+## Source changes
+
+* [Add arguments for configuring verbosity to the bazel runner (#15)](https://github.com/material-foundation/kokoro-ios-runner/commit/e686ab44e1d31e1fbf981af306daff7cafca211b) (featherless)
+* [Remove outdated comment (#12)](https://github.com/material-foundation/kokoro-ios-runner/commit/f4a5f341ced7c2016e9faa3d67eb9028f67df908) (featherless)
+
+## API changes
+
+bazel.sh now supports a `-v` argument for enabling verbosity on local builds. Verbose output is
+always enabled on kokoro builds.
 
 # 3.2.0
 
