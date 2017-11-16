@@ -132,7 +132,7 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
   bazel clean
   # Build against every cpu first.
   bazel build $TARGET --xcode_version $xcode_version $extra_args $verbosity_flags $BAZEL_ARGS \
-      --ios_multi_cpus=armv7,arm64,i386,x86_64
+      --ios_multi_cpus=i386,x86_64
   if [ "$ACTION" -ne "build" ]; then
     bazel $ACTION $TARGET --xcode_version $xcode_version $extra_args $verbosity_flags $BAZEL_ARGS
   fi
