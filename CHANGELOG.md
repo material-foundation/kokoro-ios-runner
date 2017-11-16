@@ -11,7 +11,7 @@ The minimum Xcode version must now be provided as a flag.
 bazel.sh build //:CatalogByConvention 8.2
 
 // New invocations:
-bazel.sh build //:CatalogByConvention --xcode-version 8.2
+bazel.sh build //:CatalogByConvention --min-xcode-version 8.2
 ```
 
 ## New features
