@@ -20,8 +20,6 @@ can be used to invoke the build against multiple architectures. For example:
 * [Fix another typo in the README.](https://github.com/material-foundation/kokoro-ios-runner/commit/ffa1680bd8c82d7bf720a6e5bdb8f4e404154ea2) (Jeff Verkoeyen)
 * [Fix typo in the docs.](https://github.com/material-foundation/kokoro-ios-runner/commit/52e4caa91d31a5a996ebd0c12d0c9012ac97e3bd) (Jeff Verkoeyen)
 
-## API changes
-
 # 4.0.0
 
 This major release introduces support for configuring bazel output verbosity.
