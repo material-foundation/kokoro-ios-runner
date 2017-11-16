@@ -24,7 +24,9 @@
 #   2. target:  Bazel build target. E.g. "//path/to/target:Target"
 #
 # Named arguments:
-#   -m|--min-xcode-version <version>: Minimum Xcode version. E.g. "8" or "8.2.1"
+#   -m|--min-xcode-version <version>: Every Xcode version equal to or greater than this value will
+#                                     build and run tests. E.g. "8.2.1" will run 8.2.1, 8.3.3, 9,
+#                                     etc...
 #   -v|--verbose:                     Generates verbose output on local runs.
 #                                     Does not affect kokoro runs.
 #
