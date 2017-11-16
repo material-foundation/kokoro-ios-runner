@@ -30,6 +30,8 @@
 #   -v|--verbose:                     Generates verbose output on local runs.
 #                                     Does not affect kokoro runs.
 #
+# Any other unrecognized arguments will be passed along to the bazel invocation.
+#
 # Example usage:
 #   bazel.sh build //:CatalogByConvention --min-xcode-version 8.2
 #   bazel.sh test //:CatalogByConventionTests -v
@@ -88,6 +90,7 @@ fi
 
 ACTION="$1"
 TARGET="$2"
+BAZEL_ARGS="${@:2}"
 
 # Runs our tests on every available Xcode installation.
 ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
@@ -127,5 +130,5 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
   fi
 
   bazel clean
-  bazel $ACTION $TARGET --xcode_version $xcode_version $extra_args $verbosity_flags
+  bazel $ACTION $TARGET --xcode_version $xcode_version $extra_args $verbosity_flags $BAZEL_ARGS
 done
