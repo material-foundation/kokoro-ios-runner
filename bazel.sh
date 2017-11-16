@@ -90,7 +90,7 @@ fi
 
 ACTION="$1"
 TARGET="$2"
-BAZEL_ARGS="${@:2}"
+BAZEL_ARGS="${POSITIONAL:2}"
 
 # Runs our tests on every available Xcode installation.
 ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
