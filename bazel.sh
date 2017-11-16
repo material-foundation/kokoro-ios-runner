@@ -37,7 +37,7 @@
 # Fail on any error.
 set -e
 
-script_version="v3.2.0"
+script_version="v4.0.0"
 echo "$(basename $0) version $script_version"
 
 version_as_number() {
