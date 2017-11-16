@@ -38,7 +38,7 @@
 set -e
 
 script_version="v3.2.0"
-echo "bazel_build_and_test version $script_version"
+echo "$(basename $0) version $script_version"
 
 version_as_number() {
   padded_version="${1%.}" # Strip any trailing dots
