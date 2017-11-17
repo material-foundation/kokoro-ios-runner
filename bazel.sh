@@ -39,7 +39,7 @@
 # Fail on any error.
 set -e
 
-script_version="v4.1.0"
+script_version="v4.1.1"
 echo "$(basename $0) version $script_version"
 
 version_as_number() {
@@ -90,7 +90,6 @@ fi
 
 ACTION="$1"
 TARGET="$2"
-BAZEL_ARGS="${@:3}"
 
 # Runs our tests on every available Xcode installation.
 ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
@@ -130,5 +129,5 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
   fi
 
   bazel clean
-  bazel $ACTION $TARGET --xcode_version $xcode_version $extra_args $verbosity_flags $BAZEL_ARGS
+  bazel $ACTION $TARGET --xcode_version $xcode_version $extra_args $verbosity_flags "${POSITIONAL[@]:2}"
 done
