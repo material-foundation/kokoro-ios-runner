@@ -1,3 +1,13 @@
+# 4.1.1
+
+This patch release fixes a bug in bazel argument expansion affecting arguments like
+`"--ios_simulator_device=iPad Pro (12.9-inch)"`.
+
+## Source changes
+
+* [Use array expansion to add extra bazel args to the bazel invocation. (#17)](https://github.com/material-foundation/kokoro-ios-runner/commit/40d399e7f163b41bebf3a54200077689caf3fd0b) (featherless)
+* [Remove unused header.](https://github.com/material-foundation/kokoro-ios-runner/commit/b4f3ada1d45288f5810c9c3db538f4accca647c9) (Jeff Verkoeyen)
+
 # 4.1.0
 
 This minor release introduces support for passing arbitrary flags to bazel invocations.
