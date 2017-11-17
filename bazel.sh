@@ -130,5 +130,5 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
   fi
 
   bazel clean
-  bazel $ACTION $TARGET --xcode_version $xcode_version $extra_args $verbosity_flags $BAZEL_ARGS
+  bazel $ACTION $TARGET --xcode_version $xcode_version $extra_args $verbosity_flags "${POSITIONAL[@]:2}"
 done
