@@ -138,8 +138,7 @@ if [ -n "$KOKORO_BUILD_NUMBER" ]; then
   done
 else
   # Run against whichever Xcode is currently selected.
-  echo "Selected Xcode:"
-  xcode-select -p
+  xcode_version=$(xcode-select -p)
 
   invoke_bazel
 fi
