@@ -91,6 +91,13 @@ fi
 ACTION="$1"
 TARGET="$2"
 
+ORIGINAL_SELECTED_XCODE=$(xcode-select -p)
+reset_selected_xcode() {
+  echo "Requesting sudo to change xcode versions..."
+  sudo xcode-select --switch "$ORIGINAL_SELECTED_XCODE"
+}
+trap reset_selected_xcode EXIT
+
 # Runs our tests on every available Xcode installation.
 ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
   xcode_version=$(cat /Applications/$xcode_path/Contents/version.plist \
@@ -118,10 +125,8 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
       extra_args="--test_output=errors"
     fi
 
-    if [ -n "$KOKORO_BUILD_NUMBER" ]; then
-      sudo xcode-select --switch /Applications/$xcode_path/Contents/Developer
-      xcodebuild -version
-    fi
+    sudo xcode-select --switch /Applications/$xcode_path/Contents/Developer
+    xcodebuild -version
 
     # Resolves the following crash when switching Xcode versions:
     # "Failed to locate a valid instance of CoreSimulatorService in the bootstrap"
