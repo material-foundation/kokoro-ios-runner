@@ -138,9 +138,10 @@ if [ -n "$KOKORO_BUILD_NUMBER" ]; then
   done
 else
   # Run against whichever Xcode is currently selected.
-  xcode_version=$(xcode-select -p)
+  selected_xcode_developer_path=$(xcode-select -p)
+  selected_xcode_contents_path=$(dirname "$selected_xcode_developer_path")
 
-  xcode_version=$(cat $(dirname $(xcode-select -p))/version.plist \
+  xcode_version=$(cat "$selected_xcode_contents_path/version.plist" \
     | grep "CFBundleShortVersionString" -A1 \
     | grep string \
     | cut -d'>' -f2 \
