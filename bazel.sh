@@ -92,6 +92,7 @@ ACTION="$1"
 TARGET="$2"
 
 invoke_bazel() {
+  xcode_version="$1"
   extra_args=""
   if [ "$ACTION" == "build" ]; then
     echo "🏗️  $TARGET with Xcode $xcode_version..."
@@ -134,7 +135,7 @@ if [ -n "$KOKORO_BUILD_NUMBER" ]; then
       launchctl remove com.apple.CoreSimulator.CoreSimulatorService || true
     fi
 
-    invoke_bazel
+    invoke_bazel $xcode_version
   done
 else
   # Run against whichever Xcode is currently selected.
@@ -156,5 +157,5 @@ else
     fi
   fi
 
-  invoke_bazel
+  invoke_bazel $xcode_version
 fi
