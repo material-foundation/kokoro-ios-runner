@@ -1,7 +1,10 @@
-# #develop#
+# 4.2.0
 
- TODO: Enumerate changes.
+Local runs of the bazel.sh script now only run against the currently selected Xcode install. This should hopefully alleviate flakiness on local builds.
 
+## Source changes
+
+* [Only run the selected Xcode on local runs (#19)](https://github.com/material-foundation/kokoro-ios-runner/commit/ff54f2459c04371226d4521643ffe5a9aff53b1c) (featherless)
 
 # 4.1.1
 
