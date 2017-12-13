@@ -140,5 +140,20 @@ else
   # Run against whichever Xcode is currently selected.
   xcode_version=$(xcode-select -p)
 
+  xcode_version=$(cat $(dirname $(xcode-select -p))/version.plist \
+    | grep "CFBundleShortVersionString" -A1 \
+    | grep string \
+    | cut -d'>' -f2 \
+    | cut -d'<' -f1)
+  if [ -n "$MIN_XCODE_VERSION" ]; then
+    xcode_version_as_number="$(version_as_number $xcode_version)"
+
+    if [ "$xcode_version_as_number" -lt "$MIN_XCODE_VERSION" ]; then
+      echo "The currently selected Xcode version ($xcode_version_as_number) is less than the desired version ($MIN_XCODE_VERSION)."
+      echo "Stopping execution..."
+      exit 1
+    fi
+  fi
+
   invoke_bazel
 fi
