@@ -91,28 +91,7 @@ fi
 ACTION="$1"
 TARGET="$2"
 
-ORIGINAL_SELECTED_XCODE=$(xcode-select -p)
-reset_selected_xcode() {
-  echo "Requesting sudo to change xcode versions..."
-  sudo xcode-select --switch "$ORIGINAL_SELECTED_XCODE"
-}
-trap reset_selected_xcode EXIT
-
-# Runs our tests on every available Xcode installation.
-ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
-  xcode_version=$(cat /Applications/$xcode_path/Contents/version.plist \
-    | grep "CFBundleShortVersionString" -A1 \
-    | grep string \
-    | cut -d'>' -f2 \
-    | cut -d'<' -f1)
-  if [ -n "$MIN_XCODE_VERSION" ]; then
-    xcode_version_as_number="$(version_as_number $xcode_version)"
-
-    if [ "$xcode_version_as_number" -lt "$MIN_XCODE_VERSION" ]; then
-      continue
-    fi
-  fi
-
+invoke_bazel() {
   extra_args=""
   if [ "$ACTION" == "build" ]; then
     echo "🏗️  $TARGET with Xcode $xcode_version..."
@@ -124,15 +103,43 @@ ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
     else
       extra_args="--test_output=errors"
     fi
-
-    sudo xcode-select --switch /Applications/$xcode_path/Contents/Developer
-    xcodebuild -version
-
-    # Resolves the following crash when switching Xcode versions:
-    # "Failed to locate a valid instance of CoreSimulatorService in the bootstrap"
-    launchctl remove com.apple.CoreSimulator.CoreSimulatorService || true
   fi
 
   bazel clean
   bazel $ACTION $TARGET --xcode_version $xcode_version $extra_args $verbosity_flags "${POSITIONAL[@]:2}"
-done
+}
+
+if [ -n "$KOKORO_BUILD_NUMBER" ]; then
+  # Runs our tests on every available Xcode installation.
+  ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
+    xcode_version=$(cat /Applications/$xcode_path/Contents/version.plist \
+      | grep "CFBundleShortVersionString" -A1 \
+      | grep string \
+      | cut -d'>' -f2 \
+      | cut -d'<' -f1)
+    if [ -n "$MIN_XCODE_VERSION" ]; then
+      xcode_version_as_number="$(version_as_number $xcode_version)"
+
+      if [ "$xcode_version_as_number" -lt "$MIN_XCODE_VERSION" ]; then
+        continue
+      fi
+    fi
+
+    if [ "$ACTION" == "test" ]; then
+      sudo xcode-select --switch /Applications/$xcode_path/Contents/Developer
+      xcodebuild -version
+
+      # Resolves the following crash when switching Xcode versions:
+      # "Failed to locate a valid instance of CoreSimulatorService in the bootstrap"
+      launchctl remove com.apple.CoreSimulator.CoreSimulatorService || true
+    fi
+
+    invoke_bazel
+  done
+else
+  # Run against whichever Xcode is currently selected.
+  echo "Selected Xcode:"
+  xcode-select -p
+
+  invoke_bazel
+fi
