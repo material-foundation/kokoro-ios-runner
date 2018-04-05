@@ -39,7 +39,7 @@
 # Fail on any error.
 set -e
 
-script_version="v4.2.0"
+script_version="v4.2.1"
 echo "$(basename $0) version $script_version"
 
 version_as_number() {
@@ -76,9 +76,6 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 if [ -n "$KOKORO_BUILD_NUMBER" ]; then
   # Move into our cloned repo
   cd github/repo
-
-  # Always enable verbose output on kokoro runs.
-  VERBOSE_OUTPUT=1
 fi
 
 if [ -n "$VERBOSE_OUTPUT" ]; then
