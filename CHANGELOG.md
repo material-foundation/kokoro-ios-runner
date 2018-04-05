@@ -1,7 +1,11 @@
-# #develop#
+# 4.2.1
 
- TODO: Enumerate changes.
+Bazel builds will no longer force verbose output. Verbose output can be enabled by providing the -v
+flag.
 
+## Source changes
+
+* [Don't always use verbose output when running on bazel.](https://github.com/material-foundation/kokoro-ios-runner/commit/845084d9b1c06a67e87270beb91569dafda1c3aa) (Jeff Verkoeyen)
 
 # 4.2.0
 
