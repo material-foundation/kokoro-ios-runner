@@ -1,7 +1,10 @@
-# #develop#
+# 4.2.2
 
- TODO: Enumerate changes.
+Bazel builds now ignore duplicate installations of Xcode.
 
+## Source changes
+
+* [Ignore duplicate Xcode installations when running bazel builds.](https://github.com/material-foundation/kokoro-ios-runner/commit/37c2881043c4f1f74e904baf8a87e890218dad77) (Jeff Verkoeyen)
 
 # 4.2.1
 
