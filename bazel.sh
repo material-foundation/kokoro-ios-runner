@@ -27,8 +27,12 @@
 #   -m|--min-xcode-version <version>: Every Xcode version equal to or greater than this value will
 #                                     build and run tests. E.g. "8.2.1" will run 8.2.1, 8.3.3, 9,
 #                                     etc...
+#   -s|--xcode-version <version>:     Only build and test with this specific Xcode version.
 #   -v|--verbose:                     Generates verbose output on local runs.
 #                                     Does not affect kokoro runs.
+#
+# Only one of -m or -s should be provided. If both are provided, -s will take precedence. If neither
+# are provided, then all Xcode versions will be built and tested against.
 #
 # Any unrecognized arguments will be passed along to the bazel invocation.
 #
@@ -58,6 +62,11 @@ while [[ $# -gt 0 ]]; do
   case $key in
   -m|--min-xcode-version)
     MIN_XCODE_VERSION="$(version_as_number $2)"
+    shift
+    shift
+    ;;
+  -s|--xcode-version)
+    SPECIFIC_XCODE_VERSION="$(version_as_number $2)"
     shift
     shift
     ;;
@@ -111,25 +120,30 @@ if [ -n "$KOKORO_BUILD_NUMBER" ]; then
   # Runs our tests on every available Xcode installation.
   BUILDS_TMP_PATH=$(mktemp -d)
   SEEN_XCODES_FILE_PATH="$BUILDS_TMP_PATH/seen_xcodes"
+  touch "$SEEN_XCODES_FILE_PATH"
   ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
     xcode_version=$(cat /Applications/$xcode_path/Contents/version.plist \
       | grep "CFBundleShortVersionString" -A1 \
       | grep string \
       | cut -d'>' -f2 \
       | cut -d'<' -f1)
-    if [ -n "$MIN_XCODE_VERSION" ]; then
-      xcode_version_as_number="$(version_as_number $xcode_version)"
+    xcode_version_as_number="$(version_as_number $xcode_version)"
 
+    # Ignore duplicate Xcode installations
+    if grep -xq "$xcode_version_as_number" "$SEEN_XCODES_FILE_PATH"; then
+      continue
+    fi
+
+    echo "$xcode_version_as_number" >> "$SEEN_XCODES_FILE_PATH"
+
+    if [ -n "$SPECIFIC_XCODE_VERSION" ]; then
+      if [ "$xcode_version_as_number" -ne "$SPECIFIC_XCODE_VERSION" ]; then
+        continue
+      fi
+    elif [ -n "$MIN_XCODE_VERSION" ]; then
       if [ "$xcode_version_as_number" -lt "$MIN_XCODE_VERSION" ]; then
         continue
       fi
-
-      # Ignore duplicate Xcode installations
-      if grep -xq "$xcode_version_as_number" "$SEEN_XCODES_FILE_PATH"; then
-        continue
-      fi
-
-      echo "$xcode_version_as_number" > "$SEEN_XCODES_FILE_PATH"
     fi
 
     if [ "$ACTION" == "test" ]; then
