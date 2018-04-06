@@ -39,7 +39,7 @@
 # Fail on any error.
 set -e
 
-script_version="v4.2.1"
+script_version="v4.2.2"
 echo "$(basename $0) version $script_version"
 
 version_as_number() {
@@ -109,6 +109,8 @@ invoke_bazel() {
 
 if [ -n "$KOKORO_BUILD_NUMBER" ]; then
   # Runs our tests on every available Xcode installation.
+  BUILDS_TMP_PATH=$(mktemp -d)
+  SEEN_XCODES_FILE_PATH="$BUILDS_TMP_PATH/seen_xcodes"
   ls /Applications/ | grep "Xcode" | while read -r xcode_path; do
     xcode_version=$(cat /Applications/$xcode_path/Contents/version.plist \
       | grep "CFBundleShortVersionString" -A1 \
@@ -121,6 +123,13 @@ if [ -n "$KOKORO_BUILD_NUMBER" ]; then
       if [ "$xcode_version_as_number" -lt "$MIN_XCODE_VERSION" ]; then
         continue
       fi
+
+      # Ignore duplicate Xcode installations
+      if grep -xq "$xcode_version_as_number" "$SEEN_XCODES_FILE_PATH"; then
+        continue
+      fi
+
+      echo "$xcode_version_as_number" > "$SEEN_XCODES_FILE_PATH"
     fi
 
     if [ "$ACTION" == "test" ]; then
