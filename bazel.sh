@@ -113,7 +113,18 @@ invoke_bazel() {
   fi
 
   bazel clean
-  bazel $ACTION $TARGET --xcode_version $xcode_version $extra_args $verbosity_flags "${POSITIONAL[@]:2}"
+  bazel $ACTION $TARGET \
+    --xcode_version $xcode_version \
+    $extra_args \
+    $verbosity_flags \
+    --test_size_filters=-large,-enormous \
+    "${POSITIONAL[@]:2}"
+  bazel $ACTION $TARGET \
+    --xcode_version $xcode_version \
+    $extra_args \
+    $verbosity_flags \
+    --test_size_filters=large,enormous \
+    "${POSITIONAL[@]:2}"
 }
 
 if [ -n "$KOKORO_BUILD_NUMBER" ]; then
