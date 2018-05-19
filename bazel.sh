@@ -119,12 +119,21 @@ invoke_bazel() {
     $verbosity_flags \
     --test_size_filters=-large,-enormous \
     "${POSITIONAL[@]:2}"
-  bazel $ACTION $TARGET \
-    --xcode_version $xcode_version \
-    $extra_args \
-    $verbosity_flags \
-    --test_size_filters=large,enormous \
-    "${POSITIONAL[@]:2}"
+  # Large tests are unfortunately flaky due to the iPhone simulator.
+  set +e
+  TEST_TMP_PATH=$(mktemp -d)
+  retry=0
+  until [ ${retry} -ge 3 ]; do
+    bazel $ACTION $TARGET \
+        --xcode_version $xcode_version \
+        $extra_args \
+        $verbosity_flags \
+        --test_size_filters=large,enormous \
+        "${POSITIONAL[@]:2}" && break
+    retry=$[${retry}+1]
+    echo "Retrying large tests..."
+  done
+  set -e
 }
 
 if [ -n "$KOKORO_BUILD_NUMBER" ]; then
